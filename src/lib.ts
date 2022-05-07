@@ -6,16 +6,25 @@ import {
   setOutput,
 } from '@actions/core';
 import { ActionInterface, Status } from './constants';
+import { checkTargetBranchExist } from './git';
 import { extractErrorMessage } from './utils';
 
 /**
  * Checkout file from branch
  */
-export function checkout(options: ActionInterface) {
+export async function checkout(options: ActionInterface) {
   let status: Status = Status.RUNNING;
 
   try {
     //
+    const isExist = await checkTargetBranchExist(options);
+    if (!isExist) {
+      status = Status.SKIPPED;
+      info('Target branch has not been create, skipped');
+      return;
+    }
+
+    await checkout(options);
 
     status = Status.SUCCESS;
   } catch (error) {
@@ -28,7 +37,7 @@ export function checkout(options: ActionInterface) {
     } else if (status === Status.SUCCESS) {
       info('Completed successfully! ✅');
     } else {
-      info('Not found those file. Exiting early… 📭');
+      info('Exiting early… 📭');
     }
 
     exportVariable('storage_status', status);

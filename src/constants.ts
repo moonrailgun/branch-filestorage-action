@@ -3,6 +3,8 @@ import { getInput } from '@actions/core';
 export interface ActionInterface {
   /**
    * The branch that the action should deploy to.
+   *
+   * @default "actions/filedb
    */
   branch: string;
 
@@ -20,6 +22,8 @@ export interface ActionInterface {
    * The folder where your deployment project lives.
    */
   workspace: string;
+
+  singleCommit?: boolean;
 }
 
 export const action: ActionInterface = {

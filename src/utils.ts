@@ -65,8 +65,3 @@ function stderr(data: Buffer | string): void {
     output.stderr += dataString;
   }
 }
-
-export const generateRepositoryPath = (action: ActionInterface): string =>
-  `https://${`x-access-token:${action.token}`}@github.com/${
-    action.repositoryName
-  }.git`;
