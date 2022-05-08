@@ -1,6 +1,6 @@
-name: Build release
-
+name: Deploy Production Dependencies and Code
 on:
+  workflow_dispatch:
   push:
     branches:
       - 'releases/v*'
@@ -9,6 +9,7 @@ on:
 
 jobs:
   build:
+    name: Build Production
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -19,18 +20,27 @@ jobs:
           node-version: 'v16.13.2'
           registry-url: 'https://registry.npmmirror.com'
 
-      - name: Install pnpm
+      - name: Install Pnpm
         run: npm install -g pnpm@6.24.2
 
-      - name: Build lib
+      - name: Clobber lib
+        run: rm -rf lib
+
+      - name: Set up .gitignore
+        run: |
+          sed -i -e's/^lib/# lib/' -e's/^node_module/# node_modules/' .gitignore
+
+      - name: Build
         run: |
           pnpm install
           pnpm build
 
-      - name: artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: dist
-          path: |
-            lib
-            node_modules
+      - name: Commit and Push
+        # Keep the run green if the commit fails for the lack of changes
+        continue-on-error: True
+        run: |
+          git config user.email "filestorage-action"
+          git config user.name "filestorage-action@users.noreply.github.com"
+          git add .
+          git commit -m "Deploy Production Code for Commit ${{ github.sha }} 🚀"
+          git push
