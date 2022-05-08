@@ -10,7 +10,7 @@ branding:
   color: 'green'
 inputs:
   branch:
-    description: 'This is the branch you wish to save file, default is actions/filedb.'
+    description: 'This is the branch you wish to save file, default is actions/filedb. Dont use your source code branch!'
     required: false
     default: 'actions/filedb'
 

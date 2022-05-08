@@ -1,5 +1,5 @@
 import { info } from '@actions/core';
-import { ActionInterface, Status } from './constants';
+import { action, ActionInterface, Status } from './constants';
 import { execute } from './utils';
 import _once from 'lodash/once';
 import { rmRF } from '@actions/io';
@@ -105,7 +105,7 @@ export async function save(options: ActionInterface): Promise<Status> {
 
   info(`Force-pushing changes...`);
   await execute(
-    `git push --force ${options.branch}`,
+    `git push --force origin ${options.branch}`,
     `${options.workspace}/${temporaryStorageDirectory}`
   );
 
@@ -124,6 +124,8 @@ export async function cleanupJobs(options: ActionInterface) {
     `git worktree remove ${temporaryStorageDirectory} --force`,
     options.workspace
   );
+
+  await execute(`git branch -D ${options.branch}`, options.workspace);
 
   await rmRF(temporaryStorageDirectory);
 }
