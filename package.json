@@ -5,7 +5,7 @@
   "main": "lib/lib.js",
   "types": "lib/lib.d.ts",
   "scripts": {
-    "build": "rimraf lib && tsc --declaration",
+    "build": "rimraf lib && tsc",
     "test": "ts-node ./test/index.test.ts"
   },
   "repository": {
