@@ -10,7 +10,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Checkout date
-      uses: moonrailgun/branch-filestorage-action@b64a74820cb2136cf85c4212361c6ec98f7ca66e
+      uses: moonrailgun/branch-filestorage-action@v1.0.0
       with:
         path: date
     - name: Read and show
