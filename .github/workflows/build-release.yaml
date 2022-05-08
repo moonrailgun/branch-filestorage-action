@@ -20,8 +20,8 @@ jobs:
           node-version: 'v16.13.2'
           registry-url: 'https://registry.npmmirror.com'
 
-      - name: Install Pnpm
-        run: npm install -g pnpm@6.24.2
+      - name: Install Yarn
+        run: npm install -g yarn
 
       - name: Clobber lib
         run: rm -rf lib
@@ -32,8 +32,8 @@ jobs:
 
       - name: Build
         run: |
-          pnpm install
-          pnpm build
+          yarn install
+          yarn build
 
       - name: Commit and Push
         # Keep the run green if the commit fails for the lack of changes

@@ -35,6 +35,10 @@ inputs:
     description: "This should point to where your project lives on the virtual machine. The GitHub Actions environment will set this for you. It is only neccersary to set this variable if you're using the node module."
     required: false
 
+  single-commit:
+    description: "This option can be used if you'd prefer to have a single commit on the deployment branch instead of maintaining the full history."
+    required: false
+
 outputs:
   storage-checkout-status:
     description: 'The status of the storage checkout that indicates if the run failed or passed. Possible outputs include: success|failed|skipped'

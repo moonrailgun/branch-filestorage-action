@@ -4,8 +4,9 @@ import { execute } from './utils';
 import _once from 'lodash/once';
 import { rmRF } from '@actions/io';
 
-const gitAuthor =
-  'filestorage-action <filestorage-action@users.noreply.github.com>';
+const authorName = 'filestorage-action';
+const authorEmail = 'filestorage-action@users.noreply.github.com';
+const gitAuthor = `${authorName} <${authorEmail}>`;
 
 const init = _once(async (options: ActionInterface) => {
   info('Start check branch');
@@ -178,6 +179,16 @@ async function generateWorktree(
 
   await execute(
     checkout.toString(),
+    `${options.workspace}/${temporaryStorageDirectory}`
+  );
+
+  await execute(
+    `git config user.name "${authorName}"`,
+    `${options.workspace}/${temporaryStorageDirectory}`
+  );
+
+  await execute(
+    `git config user.email "${authorEmail}"`,
     `${options.workspace}/${temporaryStorageDirectory}`
   );
 

@@ -1,6 +1,5 @@
 import { exec } from '@actions/exec';
 import buffer from 'buffer';
-import { ActionInterface } from './constants';
 
 export const extractErrorMessage = (error: unknown): string => {
   return error instanceof Error
@@ -9,6 +8,11 @@ export const extractErrorMessage = (error: unknown): string => {
     ? error
     : JSON.stringify(error);
 };
+
+/* Utility function that checks to see if a value is undefined or not.
+  If allowEmptyString is passed the parameter is allowed to contain an empty string as a valid parameter. */
+export const isNullOrUndefined = (value: unknown): boolean =>
+  typeof value === 'undefined' || value === null || value === '';
 
 interface ExecuteOutput {
   stdout: string;

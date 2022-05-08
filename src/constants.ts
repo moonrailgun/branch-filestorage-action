@@ -1,4 +1,5 @@
 import { getBooleanInput, getInput } from '@actions/core';
+import { isNullOrUndefined } from './utils';
 
 export interface ActionInterface {
   /**
@@ -34,7 +35,9 @@ export const action: ActionInterface = {
   path: getInput('path'),
   token: getInput('token'),
   workspace: getInput('workspace') || process.env.GITHUB_WORKSPACE || '.',
-  singleCommit: getBooleanInput('singleCommit') || false,
+  singleCommit: !isNullOrUndefined(getInput('single-commit'))
+    ? getInput('single-commit').toLowerCase() === 'true'
+    : false,
 };
 
 /** Status codes for the action. */
