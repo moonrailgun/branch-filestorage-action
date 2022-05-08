@@ -1,7 +1,7 @@
 import { action } from './constants';
-import { checkout } from './lib';
+import { runCheckout } from './lib';
 
 /**
  * checkout file
  */
-checkout(action);
+runCheckout(action);

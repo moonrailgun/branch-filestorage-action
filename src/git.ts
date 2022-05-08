@@ -4,6 +4,9 @@ import { execute } from './utils';
 import _once from 'lodash/once';
 import { rmRF } from '@actions/io';
 
+const gitAuthor =
+  'filestorage-action <filestorage-action@users.noreply.github.com>';
+
 const init = _once(async (options: ActionInterface) => {
   info('Start check branch');
 
@@ -15,13 +18,6 @@ const init = _once(async (options: ActionInterface) => {
   } catch {
     info('Unable to set workspace as a safe directory…');
   }
-
-  await execute(`git config user.name "filestorage-action"`, options.workspace);
-
-  await execute(
-    `git config user.email "filestorage-action@@users.noreply.github.com"`,
-    options.workspace
-  );
 
   await execute(`git config core.ignorecase false`, options.workspace);
 });
@@ -38,17 +34,30 @@ const temporaryStorageDirectory = '.branch-filestorage-action-temp';
 /**
  * check storage branch exist
  */
-export async function checkout(options: ActionInterface) {
-  init(options);
+export async function checkout(options: ActionInterface): Promise<Status> {
+  await init(options);
 
-  // TODO
+  const branchExists = await checkTargetBranchExist(options);
+  if (!branchExists) {
+    info('Target branch has not been create, skipped');
+    return Status.SKIPPED;
+  }
+
+  await generateWorktree(options, branchExists);
+
+  await execute(
+    `cp -f ${options.workspace}/${temporaryStorageDirectory}/${options.path} ${options.workspace}/${options.path}`,
+    options.workspace
+  );
+
+  return Status.SUCCESS;
 }
 
 /**
  * Save file into worktree
  */
 export async function save(options: ActionInterface): Promise<Status> {
-  init(options);
+  await init(options);
 
   const branchExists = await checkTargetBranchExist(options);
 
@@ -99,7 +108,7 @@ export async function save(options: ActionInterface): Promise<Status> {
   );
 
   await execute(
-    `git commit -m "update filestorage at ${new Date().toISOString()}" --quiet --no-verify`,
+    `git commit -m "update filestorage at ${new Date().toISOString()}" --quiet --no-verify --author="${gitAuthor}"`,
     `${options.workspace}/${temporaryStorageDirectory}`
   );
 
@@ -184,7 +193,7 @@ async function generateWorktree(
     if (!options.singleCommit) {
       // New history isn't singleCommit, create empty initial commit
       await execute(
-        `git commit --no-verify --allow-empty -m "Initial ${options.branch} commit"`,
+        `git commit --no-verify --allow-empty -m "Initial ${options.branch} commit" --author="${gitAuthor}"`,
         `${options.workspace}/${temporaryStorageDirectory}`
       );
     }

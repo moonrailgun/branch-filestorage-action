@@ -36,5 +36,8 @@ inputs:
     required: false
 
 outputs:
-  storage-status:
-    description: 'The status of the storage that indicates if the run failed or passed. Possible outputs include: success|failed|skipped'
+  storage-checkout-status:
+    description: 'The status of the storage checkout that indicates if the run failed or passed. Possible outputs include: success|failed|skipped'
+
+  storage-save-status:
+    description: 'The status of the storage save that indicates if the run failed or passed. Possible outputs include: success|failed|skipped'

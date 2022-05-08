@@ -1,4 +1,4 @@
-import { getInput } from '@actions/core';
+import { getBooleanInput, getInput } from '@actions/core';
 
 export interface ActionInterface {
   /**
@@ -23,6 +23,9 @@ export interface ActionInterface {
    */
   workspace: string;
 
+  /**
+   * Keep history only one commit
+   */
   singleCommit?: boolean;
 }
 
@@ -31,6 +34,7 @@ export const action: ActionInterface = {
   path: getInput('path'),
   token: getInput('token'),
   workspace: getInput('workspace') || process.env.GITHUB_WORKSPACE || '.',
+  singleCommit: getBooleanInput('singleCommit') || false,
 };
 
 /** Status codes for the action. */
