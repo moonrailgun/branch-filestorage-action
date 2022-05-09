@@ -1,5 +1,6 @@
 import { exec } from '@actions/exec';
 import buffer from 'buffer';
+import { ActionInterface } from './constants';
 
 export const extractErrorMessage = (error: unknown): string => {
   return error instanceof Error
@@ -18,6 +19,18 @@ interface ExecuteOutput {
   stdout: string;
   stderr: string;
 }
+
+/* Generates a the repository path used to make the commits. */
+export const generateRepositoryPath = (options: ActionInterface): string =>
+  options.sshKey
+    ? `git@${options.hostname}:${options.repositoryName}`
+    : `https://${`x-access-token:${options.token}`}@${options.hostname}/${
+        options.repositoryName
+      }.git`;
+
+/** Strips the protocol from a provided URL. */
+export const stripProtocolFromUrl = (url: string): string =>
+  url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, '').split('/')[0];
 
 const output: ExecuteOutput = { stdout: '', stderr: '' };
 

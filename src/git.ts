@@ -1,6 +1,6 @@
 import { info } from '@actions/core';
-import { action, ActionInterface, Status } from './constants';
-import { execute } from './utils';
+import { ActionInterface, Status } from './constants';
+import { execute, generateRepositoryPath } from './utils';
 import _once from 'lodash/once';
 import { rmRF } from '@actions/io';
 
@@ -23,18 +23,26 @@ const init = _once(async (options: ActionInterface) => {
   await execute(`git config core.ignorecase false`, options.workspace);
 });
 
-export async function checkTargetBranchExist(options: ActionInterface) {
-  const output = (await execute('git branch -r', options.workspace)).stdout;
-  const branchs = output.split('\n').map((s) => s.trim());
+/**
+ * check storage branch exist
+ */
+export async function checkTargetBranchExist(
+  options: ActionInterface
+): Promise<boolean> {
+  const repositoryPath = generateRepositoryPath(options);
 
-  return branchs.includes(`origin/${options.branch}`);
+  return Boolean(
+    (
+      await execute(
+        `git ls-remote --heads ${repositoryPath} refs/heads/${options.branch}`,
+        options.workspace
+      )
+    ).stdout
+  );
 }
 
 const temporaryStorageDirectory = '.branch-filestorage-action-temp';
 
-/**
- * check storage branch exist
- */
 export async function checkout(options: ActionInterface): Promise<Status> {
   await init(options);
 
