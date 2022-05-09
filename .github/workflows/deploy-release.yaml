@@ -18,5 +18,3 @@ jobs:
         with:
           branch: releases/v1
           folder: .
-          clean: false
-          single-commit: true
