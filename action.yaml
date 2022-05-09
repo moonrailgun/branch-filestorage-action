@@ -1,5 +1,5 @@
-name: 'Deploy to GitHub Pages'
-description: 'This action will handle the deployment process of your project to GitHub Pages.'
+name: 'Branch Filestorage Action'
+description: 'This action will checkout file and save updates into branch. Make github branch as a simple database'
 author: 'moonrailgun <moonrailgun@gmail.com>'
 runs:
   using: 'node16'
