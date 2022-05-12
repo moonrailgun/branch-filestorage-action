@@ -56,16 +56,16 @@ export async function checkout(options: ActionInterface): Promise<Status> {
 
   await generateWorktree(options, branchExists);
 
-  await fs.copy(
-    `${options.workspace}/${temporaryStorageDirectory}/${options.path}`,
-    `${options.workspace}/${options.path}`,
-    {
-      overwrite: true,
-      recursive: true,
-    }
-  );
-
-  return Status.SUCCESS;
+  try {
+    await execute(
+      `cp -f ${temporaryStorageDirectory}/${options.path} ${options.path}`,
+      options.workspace
+    );
+    return Status.SUCCESS;
+  } catch (err) {
+    console.error(err);
+    return Status.SKIPPED;
+  }
 }
 
 /**
@@ -78,9 +78,18 @@ export async function save(options: ActionInterface): Promise<Status> {
 
   await generateWorktree(options, branchExists);
 
+  // await execute(
+  //   `cp -f ${options.path} ${temporaryStorageDirectory}/${options.path}`,
+  //   options.workspace
+  // );
+
   await fs.copy(
-    `${options.workspace}/${options.path}`,
-    `${options.workspace}/${temporaryStorageDirectory}/${options.path}`,
+    path.resolve(options.workspace, options.path),
+    path.resolve(
+      options.workspace,
+      temporaryStorageDirectory,
+      `./${options.path}`
+    ),
     {
       overwrite: true,
       recursive: true,

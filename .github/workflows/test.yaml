@@ -10,10 +10,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Checkout file date
-      uses: moonrailgun/branch-filestorage-action@v1.2.0
+      uses: moonrailgun/branch-filestorage-action@6d3874d37b0365470be332b5df34e685a9c56851
       with:
-        path: date
+        path: ./test/date
     - name: Read and show
-      run: touch date && cat date
+      run: touch ./test/date && cat ./test/date
     - name: update date
-      run: echo $(date) > date
+      run: echo $(date) > ./test/date
