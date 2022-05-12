@@ -3,6 +3,8 @@ import { ActionInterface, Status } from './constants';
 import { execute, generateRepositoryPath } from './utils';
 import _once from 'lodash/once';
 import { rmRF } from '@actions/io';
+import fs from 'fs-extra';
+import path from 'path';
 
 const authorName = 'filestorage-action';
 const authorEmail = 'filestorage-action@users.noreply.github.com';
@@ -54,9 +56,13 @@ export async function checkout(options: ActionInterface): Promise<Status> {
 
   await generateWorktree(options, branchExists);
 
-  await execute(
-    `cp -f ${options.workspace}/${temporaryStorageDirectory}/${options.path} ${options.workspace}/${options.path}`,
-    options.workspace
+  await fs.copy(
+    `${options.workspace}/${temporaryStorageDirectory}/${options.path}`,
+    `${options.workspace}/${options.path}`,
+    {
+      overwrite: true,
+      recursive: true,
+    }
   );
 
   return Status.SUCCESS;
@@ -72,9 +78,13 @@ export async function save(options: ActionInterface): Promise<Status> {
 
   await generateWorktree(options, branchExists);
 
-  await execute(
-    `cp -f ${options.path} ${options.workspace}/${temporaryStorageDirectory}`,
-    options.workspace
+  await fs.copy(
+    `${options.workspace}/${options.path}`,
+    `${options.workspace}/${temporaryStorageDirectory}/${options.path}`,
+    {
+      overwrite: true,
+      recursive: true,
+    }
   );
 
   if (options.singleCommit) {
