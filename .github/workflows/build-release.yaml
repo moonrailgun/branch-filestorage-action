@@ -1,11 +1,6 @@
 name: Build Production Dependencies and Code
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - 'releases/v*'
-    tags-ignore:
-      - '*.*'
 
 jobs:
   build:
