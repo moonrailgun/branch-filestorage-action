@@ -26,7 +26,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Checkout date
-      uses: moonrailgun/branch-filestorage-action@v1.2.0
+      uses: moonrailgun/branch-filestorage-action@v1.2.2
       with:
         path: date
     - name: Read and show
@@ -34,3 +34,7 @@ jobs:
     - name: update date
       run: echo $(date) > date
 ```
+
+## Params
+
+For more detail, checkout [action.yaml](action.yaml)
